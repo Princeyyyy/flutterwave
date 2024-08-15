@@ -1,11 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutterwave_flutterflow/flutterwave.dart';
-import 'package:flutterwave_flutterflow/models/subaccount.dart';
+import 'package:flutterwave/flutterwave.dart';
+import 'package:flutterwave/models/subaccount.dart';
 import 'package:uuid/uuid.dart';
-import 'dart:collection';
-import 'package:http/http.dart' as Http;
 
 void main() {
   runApp(MyApp());
@@ -69,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   style: TextStyle(color: Colors.black),
                   decoration: InputDecoration(hintText: "Amount"),
                   validator: (value) =>
-                      value.isNotEmpty ? null : "Amount is required",
+                      value!.isNotEmpty ? null : "Amount is required",
                 ),
               ),
               Container(
@@ -84,7 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     hintText: "Currency",
                   ),
                   validator: (value) =>
-                      value.isNotEmpty ? null : "Currency is required",
+                      value!.isNotEmpty ? null : "Currency is required",
                 ),
               ),
               Container(
@@ -157,6 +153,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
                 child: ElevatedButton(
                   onPressed: this._onPressed,
+                  style:
+                      ElevatedButton.styleFrom(backgroundColor: Colors.orange),
                   //color: Colors.blue,
                   child: Text(
                     "Make Payment",
@@ -172,7 +170,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _onPressed() {
-    if (this.formKey.currentState.validate()) {
+    if (this.formKey.currentState!.validate()) {
       this._handlePaymentInitialization();
     }
   }
@@ -196,9 +194,10 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       mainBackgroundColor: Color.fromARGB(255, 255, 255, 255),
       mainTextStyle: TextStyle(
-          color: Color.fromARGB(255, 10, 10, 10),
-          fontSize: 19,
-          letterSpacing: 2),
+        color: Color.fromARGB(255, 10, 10, 10),
+        fontSize: 19,
+        letterSpacing: 2,
+      ),
       dialogBackgroundColor: Color.fromARGB(255, 251, 173, 7),
       appBarIcon: Icon(Icons.message, color: Colors.purple),
       buttonText: "Pay $selectedCurrency ${amountController.text}",
@@ -209,44 +208,44 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     final Customer customer = Customer(
-        name: "FLW Developer",
-        phoneNumber: this.phoneNumberController.text ?? "12345678",
-        email: "customer@customer.com");
+      name: "FLW Developer",
+      phoneNumber: this.phoneNumberController.text,
+      email: "customer@customer.com",
+    );
 
     final subAccounts = [
       SubAccount(
-          id: "RS_1A3278129B808CB588B53A14608169AD",
-          transactionChargeType: "flat",
-          transactionPercentage: 25),
+        id: "RS_1A3278129B808CB588B53A14608169AD",
+        transactionChargeType: "flat",
+        transactionPercentage: 25,
+      ),
       SubAccount(
-          id: "RS_C7C265B8E4B16C2D472475D7F9F4426A",
-          transactionChargeType: "flat",
-          transactionPercentage: 50)
+        id: "RS_C7C265B8E4B16C2D472475D7F9F4426A",
+        transactionChargeType: "flat",
+        transactionPercentage: 50,
+      )
     ];
 
     final Flutterwave flutterwave = Flutterwave(
-        context: context,
-        style: style,
-        publicKey: this.publicKeyController.text.trim().isEmpty
-            ? this.getPublicKey()
-            : this.publicKeyController.text.trim(),
-        currency: this.selectedCurrency,
-        redirectUrl: "https://google.com",
-        txRef: Uuid().v1(),
-        amount: this.amountController.text.toString().trim(),
-        customer: customer,
-        // subAccounts: subAccounts,
-        paymentOptions:
-            "card, barter,  payattitude,mpesa, mobilemoneyuganda, mobilemoneyrwanda, mobilemoneyzambia,mobilemoneyfranco,mobilemoneyghana, ussd, banktransfer",
-        customization: Customization(title: "Test Payment"),
-        isTestMode: false);
+      context: context,
+      style: style,
+      publicKey: this.publicKeyController.text.trim().isEmpty
+          ? this.getPublicKey()
+          : this.publicKeyController.text.trim(),
+      currency: this.selectedCurrency,
+      redirectUrl: "https://google.com",
+      txRef: Uuid().v1(),
+      amount: this.amountController.text.toString().trim(),
+      customer: customer,
+      // subAccounts: subAccounts,
+      paymentOptions:
+          "card, barter,  payattitude,mpesa, mobilemoneyuganda, mobilemoneyrwanda, mobilemoneyzambia,mobilemoneyfranco,mobilemoneyghana, ussd, banktransfer",
+      customization: Customization(title: "Test Payment"),
+      isTestMode: false,
+    );
     final ChargeResponse response = await flutterwave.charge();
-    if (response != null) {
-      this.showLoading(response.status);
-      print("${response.toJson()}");
-    } else {
-      this.showLoading("No Response!");
-    }
+    this.showLoading(response.status!);
+    print("${response.toJson()}");
   }
 
   /*Future<Http.Response> veryTransaction(String id) async {
@@ -258,10 +257,10 @@ class _MyHomePageState extends State<MyHomePage> {
         Uri.parse(url),
         headers: headers,
     );
- 
+
     print('Response status: ${response.statusCode}');
     print('Response body: ${response.body}');
-    
+
   }*/
 
   String getPublicKey() {

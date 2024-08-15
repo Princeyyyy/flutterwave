@@ -1,5 +1,5 @@
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:flutterwave_flutterflow/core/TransactionCallBack.dart';
+import 'package:flutterwave/core/TransactionCallBack.dart';
 
 class FlutterwaveInAppBrowser extends InAppBrowser {
   final TransactionCallBack callBack;

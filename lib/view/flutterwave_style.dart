@@ -14,19 +14,20 @@ class FlutterwaveStyle {
   final TextStyle? dialogContinueTextStyle;
   final String? buttonText;
 
-  FlutterwaveStyle(
-      {this.buttonColor,
-      this.buttonTextStyle,
-      this.appBarText,
-      this.appBarTitleTextStyle,
-      this.appBarColor,
-      this.appBarIcon,
-      this.mainBackgroundColor,
-      this.mainTextStyle,
-      this.dialogBackgroundColor,
-      this.dialogCancelTextStyle,
-      this.dialogContinueTextStyle,
-      this.buttonText});
+  FlutterwaveStyle({
+    this.buttonColor,
+    this.buttonTextStyle,
+    this.appBarText,
+    this.appBarTitleTextStyle,
+    this.appBarColor,
+    this.appBarIcon,
+    this.mainBackgroundColor,
+    this.mainTextStyle,
+    this.dialogBackgroundColor,
+    this.dialogCancelTextStyle,
+    this.dialogContinueTextStyle,
+    this.buttonText,
+  });
 
   /// Returns app bar text text or default
   String getAppBarText() {
@@ -42,7 +43,10 @@ class FlutterwaveStyle {
   TextStyle getButtonTextStyle() {
     return buttonTextStyle ??
         TextStyle(
-            color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold);
+          color: Colors.black,
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        );
   }
 
   /// Returns app bar color or default
@@ -54,12 +58,19 @@ class FlutterwaveStyle {
   TextStyle getAppBarTextStyle() {
     return appBarTitleTextStyle ??
         TextStyle(
-            fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold);
+          fontSize: 20,
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+        );
   }
 
   /// Returns app bar icon or default
   Icon getAppBarIcon() {
-    return appBarIcon ?? Icon(Icons.arrow_back, color: Colors.black);
+    return appBarIcon ??
+        Icon(
+          Icons.arrow_back,
+          color: Colors.black,
+        );
   }
 
   /// Returns background color or default
@@ -70,7 +81,11 @@ class FlutterwaveStyle {
   /// Returns dialog text style or default
   TextStyle getMainTextStyle() {
     return mainTextStyle ??
-        TextStyle(color: Colors.black, fontSize: 18, letterSpacing: 1.2);
+        TextStyle(
+          color: Colors.black,
+          fontSize: 18,
+          letterSpacing: 1.2,
+        );
   }
 
   /// Returns dialog background color or default
@@ -80,12 +95,20 @@ class FlutterwaveStyle {
 
   /// Returns dialog's cancel text style or default
   TextStyle getDialogCancelTextStyle() {
-    return dialogCancelTextStyle ?? TextStyle(fontSize: 18, color: Colors.red);
+    return dialogCancelTextStyle ??
+        TextStyle(
+          fontSize: 18,
+          color: Colors.red,
+        );
   }
 
   /// Returns dialog's continue text style or default
   TextStyle getDialogContinueTextStyle() {
-    return dialogContinueTextStyle ?? TextStyle(fontSize: 18, color: Colors.blue);
+    return dialogContinueTextStyle ??
+        TextStyle(
+          fontSize: 18,
+          color: Colors.blue,
+        );
   }
 
   /// Returns button text or default

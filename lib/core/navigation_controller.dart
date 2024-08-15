@@ -1,7 +1,7 @@
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:flutterwave_flutterflow/core/TransactionCallBack.dart';
-import 'package:flutterwave_flutterflow/view/FlutterwaveWebView.dart';
-import 'package:flutterwave_flutterflow/view/flutterwave_style.dart';
+import 'package:flutterwave/core/TransactionCallBack.dart';
+import 'package:flutterwave/view/FlutterwaveWebView.dart';
+import 'package:flutterwave/view/flutterwave_style.dart';
 import 'package:http/http.dart';
 
 import '../models/TransactionError.dart';
@@ -21,12 +21,12 @@ class NavigationController {
       final StandardResponse standardResponse =
           await request.execute(this.client);
       if (standardResponse.status == "error") {
-        throw (TransactionError(standardResponse.message!));
+        throw TransactionError(standardResponse.message!);
       }
       openBrowser(standardResponse.data?.link ?? "", request.redirectUrl);
     } catch (error) {
-      print("error is $error");
-      throw (error);
+      print("Error: $error");
+      throw error;
     }
   }
 
@@ -36,14 +36,22 @@ class NavigationController {
     final FlutterwaveInAppBrowser browser =
         FlutterwaveInAppBrowser(callBack: _callBack);
 
-    var options = InAppBrowserClassOptions(
-      crossPlatform: InAppBrowserOptions(hideUrlBar: true),
-      inAppWebViewGroupOptions: InAppWebViewGroupOptions(
-        crossPlatform: InAppWebViewOptions(javaScriptEnabled: true),
-      ),
+    InAppBrowserSettings browserSettings = InAppBrowserSettings(
+      hideUrlBar: true,
+    );
+
+    InAppWebViewSettings webViewSettings = InAppWebViewSettings(
+      javaScriptEnabled: true
+    );
+
+    InAppBrowserClassSettings settings = InAppBrowserClassSettings(
+      browserSettings: browserSettings,
+      webViewSettings: webViewSettings,
     );
 
     await browser.openUrlRequest(
-        urlRequest: URLRequest(url: Uri.parse(url)), options: options);
+      urlRequest: URLRequest(url: WebUri(url)),
+      settings: settings,
+    );
   }
 }

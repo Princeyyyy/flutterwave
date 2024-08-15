@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutterwave_flutterflow/models/TransactionError.dart';
-import 'package:flutterwave_flutterflow/models/requests/customer.dart';
-import 'package:flutterwave_flutterflow/models/requests/customizations.dart';
-import 'package:flutterwave_flutterflow/models/responses/standard_response.dart';
-import 'package:flutterwave_flutterflow/models/subaccount.dart';
-import 'package:flutterwave_flutterflow/utils.dart';
+import 'package:flutterwave/models/TransactionError.dart';
+import 'package:flutterwave/models/requests/customer.dart';
+import 'package:flutterwave/models/requests/customizations.dart';
+import 'package:flutterwave/models/responses/standard_response.dart';
+import 'package:flutterwave/models/subaccount.dart';
+import 'package:flutterwave/utils.dart';
 import 'package:http/http.dart';
 
 class StandardRequest {
@@ -23,19 +23,20 @@ class StandardRequest {
   List<SubAccount>? subAccounts;
   Map<dynamic, dynamic>? meta;
 
-  StandardRequest(
-      {required this.txRef,
-      required this.amount,
-      required this.customer,
-      required this.paymentOptions,
-      required this.customization,
-      required this.isTestMode,
-      required this.publicKey,
-      required this.redirectUrl,
-      this.currency,
-      this.paymentPlanId,
-      this.subAccounts,
-      this.meta});
+  StandardRequest({
+    required this.txRef,
+    required this.amount,
+    required this.customer,
+    required this.paymentOptions,
+    required this.customization,
+    required this.isTestMode,
+    required this.publicKey,
+    required this.redirectUrl,
+    this.currency,
+    this.paymentPlanId,
+    this.subAccounts,
+    this.meta,
+  });
 
   String toString() => jsonEncode(this._toJson());
 

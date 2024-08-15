@@ -8,5 +8,4 @@ class Utils {
   static String getBaseUrl(final bool isTestMode) {
     return isTestMode ? _DEBUG_BASE_URL : _PROD_BASE_URL;
   }
-
 }

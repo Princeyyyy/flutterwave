@@ -32,8 +32,6 @@ class StandardResponseData {
 
   /// Converts this instance to json
   Map<String, dynamic> toJson() {
-    return {
-      "link": this.link
-    };
+    return {"link": this.link};
   }
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutterwave_flutterflow/core/TransactionCallBack.dart';
-import 'package:flutterwave_flutterflow/models/requests/standard_request.dart';
-import 'package:flutterwave_flutterflow/models/responses/charge_response.dart';
-import 'package:flutterwave_flutterflow/core/navigation_controller.dart';
-import 'package:flutterwave_flutterflow/view/view_utils.dart';
+import 'package:flutterwave/core/TransactionCallBack.dart';
+import 'package:flutterwave/models/requests/standard_request.dart';
+import 'package:flutterwave/models/responses/charge_response.dart';
+import 'package:flutterwave/core/navigation_controller.dart';
+import 'package:flutterwave/view/view_utils.dart';
 import 'package:http/http.dart';
 
 import 'flutterwave_style.dart';
@@ -13,11 +13,12 @@ class PaymentWidget extends StatefulWidget {
   final StandardRequest request;
   final BuildContext mainContext;
 
-  BuildContext? loadingDialogContext;
-  SnackBar? snackBar;
-
-  PaymentWidget(
-      {required this.request, required this.style, required this.mainContext});
+  const PaymentWidget({
+    Key? key,
+    required this.request,
+    required this.style,
+    required this.mainContext,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _PaymentState();
@@ -28,6 +29,8 @@ class _PaymentState extends State<PaymentWidget>
   final _navigatorKey = GlobalKey<NavigatorState>();
   bool _isDisabled = false;
   late NavigationController controller;
+  BuildContext? loadingDialogContext;
+  SnackBar? snackBar;
 
   @override
   void initState() {
@@ -59,8 +62,9 @@ class _PaymentState extends State<PaymentWidget>
               autofocus: true,
               onPressed: _handleButtonClicked,
               style: ElevatedButton.styleFrom(
-                  primary: widget.style.getButtonColor(),
-                  textStyle: widget.style.getButtonTextStyle()),
+                backgroundColor: widget.style.getButtonColor(),
+                textStyle: widget.style.getButtonTextStyle(),
+              ),
               child: Text(
                 widget.style.getButtonText(),
                 style: widget.style.getButtonTextStyle(),
@@ -102,14 +106,15 @@ class _PaymentState extends State<PaymentWidget>
 
   void _showConfirmDialog() {
     FlutterwaveViewUtils.showConfirmPaymentModal(
-        widget.mainContext,
-        widget.request.currency,
-        widget.request.amount,
-        widget.style.getMainTextStyle(),
-        widget.style.getDialogBackgroundColor(),
-        widget.style.getDialogCancelTextStyle(),
-        widget.style.getDialogContinueTextStyle(),
-        _handlePayment);
+      widget.mainContext,
+      widget.request.currency,
+      widget.request.amount,
+      widget.style.getMainTextStyle(),
+      widget.style.getDialogBackgroundColor(),
+      widget.style.getDialogCancelTextStyle(),
+      widget.style.getDialogContinueTextStyle(),
+      _handlePayment,
+    );
   }
 
   @override
@@ -126,7 +131,11 @@ class _PaymentState extends State<PaymentWidget>
   @override
   onTransactionSuccess(String id, String txRef) {
     final ChargeResponse chargeResponse = ChargeResponse(
-        status: "success", success: true, transactionId: id, txRef: txRef);
+      status: "success",
+      success: true,
+      transactionId: id,
+      txRef: txRef,
+    );
     Navigator.pop(this.widget.mainContext, chargeResponse);
   }
 }

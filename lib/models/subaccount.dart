@@ -1,4 +1,3 @@
-
 class SubAccount {
   String id;
   int? transactionSplitRatio;
@@ -9,7 +8,7 @@ class SubAccount {
     required this.id,
     this.transactionSplitRatio,
     this.transactionChargeType,
-    this.transactionPercentage
+    this.transactionPercentage,
   });
 
   /// Converts this instance to json

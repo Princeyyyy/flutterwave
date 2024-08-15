@@ -1,11 +1,11 @@
 
-<p align="center">  
-   <img title="Flutterwave" height="200" src="https://flutterwave.com/images/logo/full.svg" width="50%"/>
+<p>  
+   <img title="Flutterwave" height="200" src="https://flutterwave.com/images/logo/full.svg" width="50%" alt="Flutterwave Image"/>
 </p>  
 
 # Flutterwave Flutter SDK (Standard)
 
-The Flutter library helps you create seamless payment experiences in flutterflow. 
+The Flutter library helps you create seamless payment experiences. 
 
 ![Overview](https://github.com/tofwono/flutterwave_flutterflow/Screenshot.png)
 
