@@ -1,2 +1,2 @@
-## [1.0.0] - October 26, 2022.
-* Initial release
+## [1.0.0] - August 15, 2024.
+* Initial release, rebuilt project
