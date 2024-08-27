@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutterwave/flutterwave.dart';
-import 'package:flutterwave/models/subaccount.dart';
 import 'package:uuid/uuid.dart';
 
 void main() {
@@ -213,18 +212,6 @@ class _MyHomePageState extends State<MyHomePage> {
       email: "customer@customer.com",
     );
 
-    final subAccounts = [
-      SubAccount(
-        id: "RS_1A3278129B808CB588B53A14608169AD",
-        transactionChargeType: "flat",
-        transactionPercentage: 25,
-      ),
-      SubAccount(
-        id: "RS_C7C265B8E4B16C2D472475D7F9F4426A",
-        transactionChargeType: "flat",
-        transactionPercentage: 50,
-      )
-    ];
 
     final Flutterwave flutterwave = Flutterwave(
       context: context,
@@ -243,25 +230,11 @@ class _MyHomePageState extends State<MyHomePage> {
       customization: Customization(title: "Test Payment"),
       isTestMode: false,
     );
+
     final ChargeResponse response = await flutterwave.charge();
-    this.showLoading(response.status!);
+
     print("${response.toJson()}");
   }
-
-  /*Future<Http.Response> veryTransaction(String id) async {
-    String url = 'https://api.flutterwave.com/v3/transactions/123456/verify';
-    Map<String, String> headers = new HashMap();
-    headers.putIfAbsent('Accept', () => 'application/json');
-    headers.putIfAbsent('Authorization', () => 'Bearer YOUR_SECRET_KEY');
-    Http.Response response = await Http.get(
-        Uri.parse(url),
-        headers: headers,
-    );
-
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
-
-  }*/
 
   String getPublicKey() {
     if (isTestMode) return "FLWPUBK_TEST-895362a74986153380262d89bfdc9b8a-X";

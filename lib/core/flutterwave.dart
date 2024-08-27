@@ -5,9 +5,13 @@ import 'package:flutterwave/models/requests/standard_request.dart';
 import 'package:flutterwave/models/responses/charge_response.dart';
 import 'package:flutterwave/models/subaccount.dart';
 import 'package:flutterwave/view/flutterwave_style.dart';
-import 'package:flutterwave/view/payment_widget.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutterwave/core/TransactionCallBack.dart';
 
-class Flutterwave {
+import '../view/view_utils.dart';
+import 'navigation_controller.dart';
+
+class Flutterwave implements TransactionCallBack {
   BuildContext context;
   String txRef;
   String amount;
@@ -40,7 +44,6 @@ class Flutterwave {
     this.style,
   });
 
-  /// Starts Standard Transaction
   Future<ChargeResponse> charge() async {
     final request = StandardRequest(
       txRef: txRef,
@@ -57,15 +60,41 @@ class Flutterwave {
       meta: meta,
     );
 
-    return await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => PaymentWidget(
-          request: request,
-          style: style ?? FlutterwaveStyle(),
-          mainContext: context,
-        ),
-      ),
+    final navigationController =
+        NavigationController(http.Client(), style, this);
+    await navigationController.startTransaction(request);
+
+    // We'll return a placeholder ChargeResponse here.
+    // The actual response will be handled in the callback methods.
+    return ChargeResponse(
+      status: "pending",
+      success: false,
+      transactionId: "",
+      txRef: txRef,
     );
+  }
+
+  @override
+  onTransactionSuccess(String id, String txRef) {
+    // Handle successful transaction
+    print("Transaction successful!");
+  }
+
+  @override
+  onCancelled() {
+    // Handle cancelled transaction
+    print("Transaction cancelled!");
+  }
+
+  @override
+  onTransactionError() {
+    // Handle transaction error
+    print("Transaction error occurred");
+
+    _showErrorAndClose("transaction error");
+  }
+
+  void _showErrorAndClose(final String errorMessage) {
+    FlutterwaveViewUtils.showToast(context, errorMessage);
   }
 }
