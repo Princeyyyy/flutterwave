@@ -1,3 +1,5 @@
+import 'package:flutterwave/utils.dart';
+
 class SubAccount {
   String id;
   int? transactionSplitRatio;
@@ -13,11 +15,12 @@ class SubAccount {
 
   /// Converts this instance to json
   Map<String, dynamic> toJson() {
-    return {
+    final map = {
       "id": this.id,
       "transaction_split_ratio": this.transactionSplitRatio,
       "transaction_charge_type": this.transactionChargeType,
       "transaction_charge": this.transactionPercentage
     };
+    return Utils.removeKeysWithEmptyValues(map);
   }
 }

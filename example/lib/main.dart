@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutterwave/flutterwave.dart';
-import 'package:uuid/uuid.dart';
 
 void main() {
   runApp(MyApp());
@@ -10,6 +9,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Standard Demo',
       home: MyHomePage('Flutterwave Standard'),
     );
@@ -35,10 +35,9 @@ class _MyHomePageState extends State<MyHomePage> {
   final emailController = TextEditingController();
   final phoneNumberController = TextEditingController();
 
-  String selectedCurrency = "UGX";
+  String selectedCurrency = "";
 
   bool isTestMode = true;
-  final pbk = "FLWPUBK_TEST-bef5d259e2f13e98debf9fb18af5cbf5-X";
 
   @override
   Widget build(BuildContext context) {
@@ -63,8 +62,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   keyboardType: TextInputType.number,
                   style: TextStyle(color: Colors.black),
                   decoration: InputDecoration(hintText: "Amount"),
-                  validator: (value) =>
-                      value!.isNotEmpty ? null : "Amount is required",
+                  validator: (value) => value != null && value.isNotEmpty
+                      ? null
+                      : "Amount is required",
                 ),
               ),
               Container(
@@ -78,8 +78,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   decoration: InputDecoration(
                     hintText: "Currency",
                   ),
-                  validator: (value) =>
-                      value!.isNotEmpty ? null : "Currency is required",
+                  validator: (value) => value != null && value.isNotEmpty
+                      ? null
+                      : "Currency is required",
                 ),
               ),
               Container(
@@ -132,7 +133,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 width: double.infinity,
                 margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
                 child: Row(
-                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text("Use Debug"),
                     Switch(
@@ -152,9 +152,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
                 child: ElevatedButton(
                   onPressed: this._onPressed,
-                  style:
-                      ElevatedButton.styleFrom(backgroundColor: Colors.orange),
-                  //color: Colors.blue,
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.orange,
+                    backgroundColor: Colors.orange,
+                  ),
                   child: Text(
                     "Make Payment",
                     style: TextStyle(color: Colors.white),
@@ -169,77 +170,36 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _onPressed() {
-    if (this.formKey.currentState!.validate()) {
+    final currentState = this.formKey.currentState;
+    if (currentState != null && currentState.validate()) {
       this._handlePaymentInitialization();
     }
   }
 
   _handlePaymentInitialization() async {
-    final style = FlutterwaveStyle(
-      appBarText: "Nyumbani Payment",
-      buttonColor: Color.fromARGB(255, 4, 113, 197),
-      buttonTextStyle: TextStyle(
-        color: Color.fromARGB(255, 255, 255, 255),
-        fontSize: 16,
-      ),
-      appBarColor: Color.fromARGB(255, 212, 118, 2),
-      dialogCancelTextStyle: TextStyle(
-        color: Color.fromARGB(255, 255, 255, 255),
-        fontSize: 18,
-      ),
-      dialogContinueTextStyle: TextStyle(
-        color: Color.fromARGB(255, 255, 255, 255),
-        fontSize: 18,
-      ),
-      mainBackgroundColor: Color.fromARGB(255, 255, 255, 255),
-      mainTextStyle: TextStyle(
-        color: Color.fromARGB(255, 10, 10, 10),
-        fontSize: 19,
-        letterSpacing: 2,
-      ),
-      dialogBackgroundColor: Color.fromARGB(255, 251, 173, 7),
-      appBarIcon: Icon(Icons.message, color: Colors.purple),
-      buttonText: "Pay $selectedCurrency ${amountController.text}",
-      appBarTitleTextStyle: TextStyle(
-        color: Color.fromARGB(255, 255, 255, 255),
-        fontSize: 18,
-      ),
-    );
-
-    final Customer customer = Customer(
-      name: "FLW Developer",
-      phoneNumber: this.phoneNumberController.text,
-      email: "customer@customer.com",
-    );
-
+    final Customer customer = Customer(email: "customer@customer.com");
 
     final Flutterwave flutterwave = Flutterwave(
       context: context,
-      style: style,
       publicKey: this.publicKeyController.text.trim().isEmpty
           ? this.getPublicKey()
           : this.publicKeyController.text.trim(),
       currency: this.selectedCurrency,
-      redirectUrl: "https://google.com",
-      txRef: Uuid().v1(),
+      redirectUrl: 'https://facebook.com',
+      txRef: "Uuid().v1()",
       amount: this.amountController.text.toString().trim(),
       customer: customer,
-      // subAccounts: subAccounts,
-      paymentOptions:
-          "card, barter,  payattitude,mpesa, mobilemoneyuganda, mobilemoneyrwanda, mobilemoneyzambia,mobilemoneyfranco,mobilemoneyghana, ussd, banktransfer",
+      paymentOptions: "card, payattitude, barter, bank transfer, ussd",
       customization: Customization(title: "Test Payment"),
-      isTestMode: false,
+      isTestMode: this.isTestMode,
     );
-
     final ChargeResponse response = await flutterwave.charge();
-
+    this.showLoading(response.toString());
     print("${response.toJson()}");
   }
 
   String getPublicKey() {
-    if (isTestMode) return "FLWPUBK_TEST-895362a74986153380262d89bfdc9b8a-X";
-    // "FLWPUBK_TEST-02b9b5fc6406bd4a41c3ff141cc45e93-X";
-    return "FLWPUBK-aa4cd0b443404147d2d8229a37694b00-X";
+    return "";
   }
 
   void _openBottomSheet() {
@@ -258,20 +218,22 @@ class _MyHomePageState extends State<MyHomePage> {
       color: Colors.white,
       child: ListView(
         children: currencies
-            .map((currency) => ListTile(
-                  onTap: () => {this._handleCurrencyTap(currency)},
-                  title: Column(
-                    children: [
-                      Text(
-                        currency,
-                        textAlign: TextAlign.start,
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      SizedBox(height: 4),
-                      Divider(height: 1)
-                    ],
-                  ),
-                ))
+            .map(
+              (currency) => ListTile(
+                onTap: () => {this._handleCurrencyTap(currency)},
+                title: Column(
+                  children: [
+                    Text(
+                      currency,
+                      textAlign: TextAlign.start,
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    SizedBox(height: 4),
+                    Divider(height: 1)
+                  ],
+                ),
+              ),
+            )
             .toList(),
       ),
     );
@@ -288,13 +250,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> showLoading(String message) {
     return showDialog(
       context: this.context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
-        // set up the button
-        Widget okButton = ElevatedButton(
-          child: Text("OK"),
-          onPressed: () {},
-        );
         return AlertDialog(
           content: Container(
             margin: EdgeInsets.fromLTRB(30, 20, 30, 20),
@@ -302,9 +259,6 @@ class _MyHomePageState extends State<MyHomePage> {
             height: 50,
             child: Text(message),
           ),
-          actions: [
-            okButton,
-          ],
         );
       },
     );
